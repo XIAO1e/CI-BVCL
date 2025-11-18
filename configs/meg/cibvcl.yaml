@@ -1,0 +1,46 @@
+timesteps: [0,201]
+
+name: "${dataset}_${exp_setting}_cmcd_${brain_backbone}_${vision_backbone}"
+
+models:
+  brain:
+    target: "base.cmcd_backbone.${brain_backbone}"
+    params:
+      z_dim: ${z_dim}
+      c_num: 271
+      timesteps: ${timesteps}
+      emb_size: 40
+      nhead: 8
+      num_layers: 1
+      dropout: 0.1
+
+data:
+  data_dir: data/things-meg/Preprocessed_data
+  selected_ch: False
+  model_type: ${vision_backbone}
+  train_batch_size: 512
+  val_batch_size: 200
+  test_batch_size: 200
+  uncertainty_aware: False
+  blur_type:
+    target: base.inpating_data.DirectT
+
+  train_avg: True
+  test_avg: True
+  timesteps: ${timesteps}
+
+# CMCD specific knobs
+w_causal: 0.1
+augment_type: phase   # placeholder; will be overridden by CLI
+augment_tau: 0.5      # placeholder; will be overridden by CLI
+causal_temperature: 0.07
+
+train:
+  epoch: ${epoch}
+  optimizer: AdamW
+  lr: ${lr}
+
+save_dir: 'exp'
+save_log_dir: '/tf_logs'
+
+
